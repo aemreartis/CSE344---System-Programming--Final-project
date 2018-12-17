@@ -9,7 +9,7 @@
 #include <pthread.h>
 #include<signal.h>
 
-
+// Struct to keep clients information
 typedef struct clientInfo{
 	char name[50];
 	char priority[1];
@@ -18,6 +18,7 @@ typedef struct clientInfo{
 	
 }clientInfo;
 
+//Struct to keep providers information
 typedef struct providerInfo{
 	char name[50];
 	clientInfo clientQueue[2];
@@ -30,6 +31,7 @@ typedef struct providerInfo{
 	int taskNum;
 }providerInfo;
 
+
 providerInfo* providers;
 pthread_mutex_t mutex;
 int numOfProviders=1;
@@ -37,14 +39,23 @@ int fdThreads[2];
 FILE* logFile;
 int sockfd, newsockfd, portno;
  pthread_t handleThId, *providersThId;
-      
+
+//Signal handler
 void sig_handler(int signo);
 
- 
+//When a message recived this fucntion sends it to proper provider
 static void* handle_accept(void* arg);
+
+//The provider threads waits for a job to add their list , if list is not empty, it gets the job and sends its result to proper client   
 static void* thread_provider(void* arg);
+
+//Prints error and exit 
 void error(const char *msg);
+
+//Calculate Cos (Providers message)
 double calculateCos(double degree);
+
+//calculates factorial
 int factorial(int n);
 
 int main(int argc, char *argv[])
